@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin</title>
+<title>Admin LRM HOST</title>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -11,9 +11,9 @@
 
 <style>
 body{font-family:Arial;background:#f4f4f4}
-.container{max-width:420px;margin:20px auto;background:#fff;padding:20px;border-radius:16px}
+.container{max-width:420px;margin:20px auto;background:white;padding:20px;border-radius:16px}
 input,button{width:100%;padding:12px;margin-top:8px}
-button{background:#ff4d00;color:#fff;border:none}
+button{background:#ff4d00;color:white;border:none;font-weight:bold}
 </style>
 </head>
 
@@ -21,18 +21,19 @@ button{background:#ff4d00;color:#fff;border:none}
 
 <div class="container">
 <h3>Admin Panel</h3>
+
 <input id="nama" placeholder="Nama Produk">
 <input id="harga" placeholder="Harga">
-<input type="file" id="gambar">
+<input type="file" id="gambar" accept="image/*">
 <button onclick="tambah()">Tambah Produk</button>
 </div>
 
 <script>
 firebase.initializeApp({
-  apiKey: "ISI_PUNYA_KAMU",
+  apiKey: "ISI_API_KEY",
   authDomain: "ISI",
   projectId: "ISI",
-  storageBucket: "ISI",
+  storageBucket: "ISI"
 });
 
 const db = firebase.firestore();
@@ -47,12 +48,12 @@ async function tambah(){
   const url = await ref.getDownloadURL();
 
   const docRef = db.collection("toko").doc("main");
-  const doc = await docRef.get();
+  const snap = await docRef.get();
 
-  const data = doc.exists ? doc.data() : {
+  let data = snap.exists ? snap.data() : {
     nama:"LRM HOST",
     deskripsi:"Produk pilihan tersedia di sini",
-    wa:"628xxxx",
+    wa:"628XXXXXXXXXX",
     produk:[]
   };
 
@@ -63,7 +64,11 @@ async function tambah(){
   });
 
   await docRef.set(data);
-  alert("Produk ditambahkan");
+  alert("Produk berhasil ditambahkan");
+
+  nama.value="";
+  harga.value="";
+  gambar.value="";
 }
 </script>
 
