@@ -3,29 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LRM HOST</title>
+<title>Lorem Shop</title>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <style>
-body{margin:0;font-family:Arial;background:#f4f4f4;padding-bottom:70px}
+body{margin:0;font-family:Arial;background:#f4f4f4;padding-bottom:60px}
 .container{max-width:420px;margin:auto;padding:16px}
 .header{
 background:linear-gradient(135deg,#0f1b3a,#1b3c6b);
 color:white;padding:18px;border-radius:16px;margin-top:16px
 }
 .badge{background:#ff4d00;padding:6px 10px;border-radius:20px;font-size:12px;float:right}
-.produk{background:#fff;padding:12px;border-radius:12px;margin-top:12px}
+.produk{background:white;padding:12px;border-radius:12px;margin-top:12px}
 img{width:100%;border-radius:10px}
-button{width:100%;padding:12px;border:none;border-radius:10px;background:#25D366;color:white}
+button{width:100%;padding:12px;border:none;border-radius:10px;background:#25D366;color:white;font-weight:bold}
 .bottom-nav{
 position:fixed;bottom:0;left:0;right:0;
-background:white;display:flex;justify-content:space-around;
+background:white;display:flex;justify-content:center;
 padding:10px 0;box-shadow:0 -3px 10px rgba(0,0,0,.08)
 }
-.nav{color:#999;text-align:center}
-.active{color:#ff4d00}
+.nav{color:#ff4d00;text-align:center;font-weight:bold}
 </style>
 </head>
 
@@ -33,46 +32,47 @@ padding:10px 0;box-shadow:0 -3px 10px rgba(0,0,0,.08)
 
 <div class="container">
   <div class="header">
-    <div class="badge">TOKO ONLINE</div>
-    <h2 id="namaToko">LRM HOST</h2>
+    <div class="badge">LOREM SHOP</div>
+    <h2 id="namaToko">LOREM SHOP</h2>
     <small id="desk">Produk pilihan tersedia di sini</small>
   </div>
 
-  <h4>PRODUK</h4>
   <div id="produk"></div>
 </div>
 
 <div class="bottom-nav">
-  <div class="nav active">🏠<br>Beranda</div>
-  <div class="nav">👤<br>Profil</div>
+  <div class="nav">🏠 Beranda</div>
 </div>
 
 <script>
+/* ===== FIREBASE CONFIG ===== */
 const firebaseConfig = {
   apiKey: "ISI_API_KEY",
-  authDomain: "ISI",
-  projectId: "ISI",
-  storageBucket: "ISI"
+  authDomain: "ISI_AUTH_DOMAIN",
+  projectId: "ISI_PROJECT_ID",
+  storageBucket: "ISI_STORAGE_BUCKET"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
+/* ===== LOAD DATA TOKO ===== */
 db.collection("toko").doc("main").onSnapshot(doc=>{
   if(!doc.exists) return;
   const d = doc.data();
 
-  namaToko.innerText = d.nama;
-  desk.innerText = d.deskripsi;
+  namaToko.innerText = d.nama || "Toko Online";
+  desk.innerText = d.deskripsi || "";
 
-  produk.innerHTML="";
-  d.produk.forEach(p=>{
+  produk.innerHTML = "";
+  (d.produk || []).forEach(p=>{
     produk.innerHTML += `
       <div class="produk">
         <img src="${p.gambar}">
         <b>${p.nama}</b>
         <div>Rp ${p.harga}</div>
-        <a href="https://wa.me/${d.wa}?text=Saya mau beli ${p.nama}">
+        <a target="_blank"
+           href="https://wa.me/${d.wa}?text=${encodeURIComponent('Saya mau beli ' + p.nama)}">
           <button>Beli via WhatsApp</button>
         </a>
       </div>
